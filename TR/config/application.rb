@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'boot'
 
 require 'rails/all'
@@ -11,10 +13,10 @@ module TR
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-    config.autoload_paths += %W(
-      #{config.root}/app/controllers/concerns 
-      #{config.root}/app/models/concerns 
+    config.autoload_paths += %W[
+      #{config.root}/app/controllers/concerns
+      #{config.root}/app/models/concerns
       #{config.root}/app/jobs
-    )
+    ]
   end
 end

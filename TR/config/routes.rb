@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Route Map
 #
 #        Prefix Verb   URI Pattern                   Controller#Action
@@ -17,5 +19,4 @@ Rails.application.routes.draw do
       get :ordered_campaigns
     end
   end
-
 end

@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 require 'uri'
 require 'net/http'
 require 'openssl'
 
 class FetchCampaignsJob < ApplicationJob
   queue_as :default
-  
-  def perform()
-    url = URI("https://staging.tapresearch.com/api/v1/campaigns")
+
+  def perform
+    url = URI('https://staging.tapresearch.com/api/v1/campaigns')
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
     request = Net::HTTP::Get.new(url)
-    request["Authorization"] = 'Basic  Y29kZXRlc3RAdGFwLmNvbToxYzdkZDZmZDJhOTRiMmU2NDMxYjM2NzE4OWFlYWQwMQ=='
+    request['Authorization'] = 'Basic  Y29kZXRlc3RAdGFwLmNvbToxYzdkZDZmZDJhOTRiMmU2NDMxYjM2NzE4OWFlYWQwMQ=='
 
     response = http.request(request)
     campaigns = JSON.parse(response.read_body)
@@ -26,18 +28,18 @@ class FetchCampaignsJob < ApplicationJob
       cid = rec['id']
       c.save
       id = c.id
-      #Get all quotas for this campaign
+      # Get all quotas for this campaign
       campaign_url = URI("https://staging.tapresearch.com/api/v1/campaigns/#{cid}")
       http = Net::HTTP.new(campaign_url.host, campaign_url.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       request = Net::HTTP::Get.new(campaign_url)
-      request["Authorization"] = 'Basic  Y29kZXRlc3RAdGFwLmNvbToxYzdkZDZmZDJhOTRiMmU2NDMxYjM2NzE4OWFlYWQwMQ=='
+      request['Authorization'] = 'Basic  Y29kZXRlc3RAdGFwLmNvbToxYzdkZDZmZDJhOTRiMmU2NDMxYjM2NzE4OWFlYWQwMQ=='
 
       response = http.request(request)
       campaigns_with_quotas = JSON.parse(response.read_body)
-      quotas = campaigns_with_quotas["campaign_quotas"]
+      quotas = campaigns_with_quotas['campaign_quotas']
       quotas.each do |quotum|
         q = Quotum.new
         q.original_quotum_id = quotum['id']
@@ -54,14 +56,8 @@ class FetchCampaignsJob < ApplicationJob
           qual.quotum_id = qid
 
           qual.save
-
-        end  
-      end  
-
-
+        end
+      end
     end
-
-
   end
-
 end

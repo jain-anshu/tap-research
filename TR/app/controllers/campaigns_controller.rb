@@ -1,18 +1,13 @@
-class CampaignsController < ApplicationController
-  def index
-    ::FetchCampaignsJob.new.perform
-    campaigns = Campaign.all
-    render json: campaigns
-  end
+# frozen_string_literal: true
 
+class CampaignsController < ApplicationController
   def ordered_campaigns
     campaigns = Campaign.includes(quota: :qualifications)
     campaigns = sort_by_count campaigns
     payload = campaigns.as_json(
       include: { quota: {
         include:  :qualifications
-      }
-    }
+      } }
     )
     render json: payload
   end
@@ -26,5 +21,4 @@ class CampaignsController < ApplicationController
       end
     end.reverse
   end
-
 end
